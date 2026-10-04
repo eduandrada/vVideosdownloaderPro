@@ -5,14 +5,63 @@
  */
 
 export function getApiBaseUrl(): string {
-  if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
+  // 1. Client-side manual override (saved via Settings modal)
+  if (typeof window !== "undefined") {
+    const custom = localStorage.getItem("vvideo_custom_api_url");
+    if (custom && custom.trim()) {
+      let clean = custom.trim();
+      if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
+        clean = `https://${clean}`;
+      }
+      return clean.replace(/\/+$/, "");
+    }
   }
+
+  // 2. Next.js public environment variable
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    let clean = process.env.NEXT_PUBLIC_API_URL.trim();
+    if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
+      clean = `https://${clean}`;
+    }
+    return clean.replace(/\/+$/, "");
+  }
+
+  // 3. Fallback based on current browser URL
   if (typeof window !== "undefined") {
     const hostname = window.location.hostname || "127.0.0.1";
+    // If running on Render, automatically point to standard backend naming
+    if (hostname.endsWith(".onrender.com")) {
+      if (hostname.includes("vvideosdownloaderpro")) {
+        return "https://vvideosdownloaderpro-api.onrender.com";
+      }
+      const prefix = hostname.replace(".onrender.com", "").replace(/-web$/, "");
+      return `https://${prefix}-api.onrender.com`;
+    }
     return `http://${hostname}:8000`;
   }
   return "http://127.0.0.1:8000";
+}
+
+export function setCustomApiUrl(url: string | null) {
+  if (typeof window !== "undefined") {
+    if (url && url.trim()) {
+      let clean = url.trim();
+      if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
+        clean = `https://${clean}`;
+      }
+      clean = clean.replace(/\/+$/, "");
+      localStorage.setItem("vvideo_custom_api_url", clean);
+    } else {
+      localStorage.removeItem("vvideo_custom_api_url");
+    }
+  }
+}
+
+export function getCustomApiUrl(): string {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("vvideo_custom_api_url") || "";
+  }
+  return "";
 }
 
 export function getApiUrl(endpoint: string): string {

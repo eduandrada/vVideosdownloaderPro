@@ -12,7 +12,7 @@ import {
   Cpu, 
   Globe
 } from "lucide-react";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, getApiBaseUrl, setCustomApiUrl, getCustomApiUrl } from "@/lib/api";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -23,14 +23,28 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [health, setHealth] = useState<any>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+  const [apiUrlInput, setApiUrlInput] = useState<string>("");
+  const [saveUrlSuccess, setSaveUrlSuccess] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      apiFetch("/api/health")
-        .then((data) => setHealth(data))
-        .catch(() => setHealth({ status: "offline" }));
+      setApiUrlInput(getCustomApiUrl() || getApiBaseUrl());
+      checkHealth();
     }
   }, [isOpen]);
+
+  const checkHealth = () => {
+    apiFetch("/api/health")
+      .then((data) => setHealth(data))
+      .catch(() => setHealth({ status: "offline" }));
+  };
+
+  const handleSaveApiUrl = () => {
+    setCustomApiUrl(apiUrlInput.trim());
+    setSaveUrlSuccess(true);
+    setTimeout(() => setSaveUrlSuccess(false), 2500);
+    checkHealth();
+  };
 
   if (!isOpen) return null;
 
@@ -77,25 +91,63 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Configuración del Motor OmniPull</h3>
+            <h3 className="text-xl font-bold text-white">Configuración vVideosdownloaderPro v2</h3>
             <p className="text-xs text-gray-400 mt-0.5">
               Gestión de Anti-bloqueos, Cookies de Sesión y Estado del Servidor
             </p>
           </div>
         </div>
 
+        {/* Backend API Connection Box */}
+        <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3 mb-6">
+          <div className="flex items-center justify-between">
+            <h4 className="text-xs font-semibold text-gray-300 uppercase tracking-wider flex items-center gap-2">
+              <Server className="w-4 h-4 text-cyan-400" />
+              <span>Conexión con el Servidor Backend</span>
+            </h4>
+            <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+              health?.status === "online" 
+                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" 
+                : "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+            }`}>
+              {health?.status === "online" ? "● Conectado" : "○ Sin conexión"}
+            </span>
+          </div>
+
+          <p className="text-[11px] text-gray-400">
+            Ingresa la URL de tu API en Render (ej. <code className="text-cyan-300">https://vvideosdownloaderpro-api.onrender.com</code>):
+          </p>
+
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={apiUrlInput}
+              onChange={(e) => setApiUrlInput(e.target.value)}
+              placeholder="https://vvideosdownloaderpro-api.onrender.com"
+              className="flex-1 bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400/60 font-mono"
+            />
+            <button
+              type="button"
+              onClick={handleSaveApiUrl}
+              className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-semibold text-xs transition active:scale-95 flex-shrink-0"
+            >
+              {saveUrlSuccess ? "¡Guardado!" : "Guardar & Probar"}
+            </button>
+          </div>
+        </div>
+
         {/* System Health Section */}
         <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-3 mb-6">
           <h4 className="text-xs font-semibold text-gray-300 uppercase tracking-wider flex items-center gap-2">
-            <Server className="w-4 h-4 text-violet-400" />
+            <Cpu className="w-4 h-4 text-violet-400" />
             <span>Diagnóstico del Sistema</span>
           </h4>
           <div className="grid grid-cols-2 gap-3 text-xs">
             <div className="p-3 rounded-xl bg-black/40 border border-white/5">
               <span className="text-gray-500 block">Backend API:</span>
               <span className="font-semibold text-emerald-400 flex items-center gap-1.5 mt-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                {health?.status === "online" ? "En Línea (FastAPI)" : "Verificando..."}
+                <span className={`w-2 h-2 rounded-full ${health?.status === "online" ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`} />
+                {health?.status === "online" ? "En Línea (FastAPI)" : "Desconectado"}
               </span>
             </div>
             <div className="p-3 rounded-xl bg-black/40 border border-white/5">
