@@ -23,6 +23,10 @@ interface BoundingBox {
   y: number;
   width: number;
   height: number;
+  pct_x?: number;
+  pct_y?: number;
+  pct_w?: number;
+  pct_h?: number;
 }
 
 interface WatermarkSelectorModalProps {
@@ -98,6 +102,10 @@ export function WatermarkSelectorModal({
     y: Math.round((boxPct.y / 100) * baseVideoHeight),
     width: Math.round((boxPct.w / 100) * baseVideoWidth),
     height: Math.round((boxPct.h / 100) * baseVideoHeight),
+    pct_x: boxPct.x,
+    pct_y: boxPct.y,
+    pct_w: boxPct.w,
+    pct_h: boxPct.h,
   };
 
   // Drag handlers
