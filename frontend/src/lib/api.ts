@@ -139,6 +139,10 @@ export async function apiFetch<T = any>(
       errorMessage = `Error del servidor (${res.status} ${res.statusText})`;
     }
 
+    if (errorMessage.toLowerCase().includes("internal server error")) {
+      errorMessage = "El motor Backend (API de Python) no está respondiendo o aún no fue creado en Render. Ve al menú Anti-Bloqueos en la barra superior para verificar o configurar la URL de tu API.";
+    }
+
     throw new Error(errorMessage);
   }
 

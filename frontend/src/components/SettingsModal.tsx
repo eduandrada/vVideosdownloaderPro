@@ -40,7 +40,15 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   };
 
   const handleSaveApiUrl = () => {
-    setCustomApiUrl(apiUrlInput.trim());
+    let clean = apiUrlInput.trim();
+    if (clean.endsWith(".onrender.")) {
+      clean = clean + "com";
+      setApiUrlInput(clean);
+    } else if (clean.endsWith(".onrender")) {
+      clean = clean + ".com";
+      setApiUrlInput(clean);
+    }
+    setCustomApiUrl(clean);
     setSaveUrlSuccess(true);
     setTimeout(() => setSaveUrlSuccess(false), 2500);
     checkHealth();
@@ -134,6 +142,12 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               {saveUrlSuccess ? "¡Guardado!" : "Guardar & Probar"}
             </button>
           </div>
+
+          {health?.status !== "online" && (
+            <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-200 mt-2">
+              💡 <strong>¿Todavía no creaste el Backend en Render?</strong> Ve a tu panel de Render ➔ <strong>+ New</strong> ➔ <strong>Web Service</strong> ➔ Selecciona tu repo ➔ Language <strong>Python 3</strong> ➔ Root Directory: <code className="bg-black/40 px-1 py-0.5 rounded text-cyan-300">backend</code>.
+            </div>
+          )}
         </div>
 
         {/* System Health Section */}
