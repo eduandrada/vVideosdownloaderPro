@@ -34,7 +34,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   }, [isOpen]);
 
   const checkHealth = () => {
-    apiFetch("/api/health")
+    apiFetch("/api/health", { timeoutMs: 3000 })
       .then((data) => setHealth(data))
       .catch(() => setHealth({ status: "offline" }));
   };

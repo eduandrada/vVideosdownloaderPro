@@ -13,12 +13,12 @@ export function Navbar({ onOpenSettings }: NavbarProps) {
 
   useEffect(() => {
     const checkHealth = () => {
-      apiFetch<{ status: string }>("/api/health")
+      apiFetch<{ status: string }>("/api/health", { timeoutMs: 3000 })
         .then((d) => setIsLive(d.status === "online"))
         .catch(() => setIsLive(false));
     };
     checkHealth();
-    const timer = setInterval(checkHealth, 10000);
+    const timer = setInterval(checkHealth, 8000);
     return () => clearInterval(timer);
   }, []);
 
