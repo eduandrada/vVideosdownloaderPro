@@ -20,6 +20,17 @@ html, body {
   max-width: 100vw;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Eliminate annoying iOS / Android auto-zoom when tapping inputs */
+input, textarea, select {
+  font-size: 16px !important;
+}
+
+/* Smooth momentum scrolling for touch screens */
+* {
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Glassmorphism Styles */

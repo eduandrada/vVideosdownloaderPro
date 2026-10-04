@@ -102,9 +102,9 @@ export function MediaCard({
   return (
     <div className="w-full max-w-4xl mx-auto mt-8 glass-panel rounded-3xl overflow-hidden border border-white/10 shadow-2xl transition-all duration-300">
       {/* Top Preview Banner */}
-      <div className="flex flex-col md:flex-row gap-6 p-6 sm:p-8 bg-gradient-to-b from-white/[0.04] to-transparent border-b border-white/5">
+      <div className="flex flex-col md:flex-row gap-4 sm:gap-6 p-4 sm:p-8 bg-gradient-to-b from-white/[0.04] to-transparent border-b border-white/5">
         {/* Thumbnail Preview */}
-        <div className="relative w-full md:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden bg-black/60 border border-white/10 flex-shrink-0 group shadow-lg">
+        <div className="relative w-full md:w-80 h-44 sm:h-52 rounded-2xl overflow-hidden bg-black/60 border border-white/10 flex-shrink-0 group shadow-lg">
           {metadata.thumbnail ? (
             <img
               src={metadata.thumbnail}
@@ -133,10 +133,10 @@ export function MediaCard({
         {/* Info & Details */}
         <div className="flex flex-col justify-between flex-1 min-w-0">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight line-clamp-2 hover:text-cyan-300 transition-colors">
+            <h2 className="text-lg sm:text-2xl font-bold text-white leading-tight line-clamp-2 hover:text-cyan-300 transition-colors">
               {metadata.title}
             </h2>
-            <div className="flex flex-wrap items-center gap-3 mt-3 text-xs sm:text-sm text-gray-400">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-2 sm:mt-3 text-xs sm:text-sm text-gray-400">
               <span className="font-medium text-gray-300">
                 Por: <strong className="text-white">{metadata.uploader}</strong>
               </span>
@@ -156,12 +156,12 @@ export function MediaCard({
           </div>
 
           {/* Quick Stats Tags */}
-          <div className="flex flex-wrap items-center gap-2 mt-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-violet-500/10 border border-violet-500/20 text-xs font-semibold text-violet-300">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-3 sm:mt-4">
+            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-violet-500/10 border border-violet-500/20 text-[11px] sm:text-xs font-semibold text-violet-300">
               <Zap className="w-3.5 h-3.5 text-violet-400" />
-              {metadata.video_formats.length} Calidades Disponibles
+              {metadata.video_formats.length} Calidades
             </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs font-semibold text-cyan-300">
+            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-[11px] sm:text-xs font-semibold text-cyan-300">
               <Disc className="w-3.5 h-3.5 text-cyan-400" />
               Audio HD 320kbps
             </span>
@@ -170,11 +170,11 @@ export function MediaCard({
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex items-center gap-2 px-6 sm:px-8 pt-4 border-b border-white/5 bg-black/20">
+      <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-8 pt-3 sm:pt-4 border-b border-white/5 bg-black/20 overflow-x-auto no-scrollbar">
         <button
           type="button"
           onClick={() => setActiveTab("video")}
-          className={`flex items-center gap-2 py-3 px-4 rounded-t-xl text-sm font-semibold transition border-b-2 ${
+          className={`flex items-center gap-1.5 sm:gap-2 py-2.5 sm:py-3 px-3 sm:px-4 rounded-t-xl text-xs sm:text-sm font-semibold transition border-b-2 whitespace-nowrap flex-shrink-0 ${
             activeTab === "video"
               ? "text-cyan-400 border-cyan-400 bg-white/[0.04]"
               : "text-gray-400 border-transparent hover:text-white hover:bg-white/[0.02]"
@@ -187,7 +187,7 @@ export function MediaCard({
         <button
           type="button"
           onClick={() => setActiveTab("audio")}
-          className={`flex items-center gap-2 py-3 px-4 rounded-t-xl text-sm font-semibold transition border-b-2 ${
+          className={`flex items-center gap-1.5 sm:gap-2 py-2.5 sm:py-3 px-3 sm:px-4 rounded-t-xl text-xs sm:text-sm font-semibold transition border-b-2 whitespace-nowrap flex-shrink-0 ${
             activeTab === "audio"
               ? "text-violet-400 border-violet-400 bg-white/[0.04]"
               : "text-gray-400 border-transparent hover:text-white hover:bg-white/[0.02]"
@@ -201,20 +201,20 @@ export function MediaCard({
           <button
             type="button"
             onClick={() => setActiveTab("image")}
-            className={`flex items-center gap-2 py-3 px-4 rounded-t-xl text-sm font-semibold transition border-b-2 ${
+            className={`flex items-center gap-1.5 sm:gap-2 py-2.5 sm:py-3 px-3 sm:px-4 rounded-t-xl text-xs sm:text-sm font-semibold transition border-b-2 whitespace-nowrap flex-shrink-0 ${
               activeTab === "image"
                 ? "text-pink-400 border-pink-400 bg-white/[0.04]"
                 : "text-gray-400 border-transparent hover:text-white hover:bg-white/[0.02]"
             }`}
           >
             <ImageIcon className="w-4 h-4" />
-            <span>Imágenes / Carrusel ({metadata.image_formats.length})</span>
+            <span>Imágenes ({metadata.image_formats.length})</span>
           </button>
         )}
       </div>
 
       {/* Tab Contents */}
-      <div className="p-6 sm:p-8">
+      <div className="p-4 sm:p-8">
         {/* VIDEO TAB */}
         {activeTab === "video" && (
           <div className="space-y-6">

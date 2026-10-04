@@ -118,51 +118,51 @@ export function HeroInput({
       <div className="relative w-full group">
         {/* Ambient Gradient Glow Background */}
         <div 
-          className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 opacity-30 blur-xl group-hover:opacity-60 transition duration-500 group-focus-within:opacity-75"
+          className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 opacity-25 blur-xl group-hover:opacity-50 transition duration-500"
         />
 
-        <div className="relative flex items-center glass-panel-glow rounded-2xl p-1.5 sm:p-2.5 transition-all duration-300">
-          {/* Platform Icon Badge */}
-          <div className="flex items-center pl-2 sm:pl-3 pr-1 sm:pr-2 py-1 text-gray-400">
-            {detectedPlatform ? (
-              <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-xs font-semibold tracking-wide">
-                {getPlatformIcon(detectedPlatform.id)}
-                <span className="hidden sm:inline" style={{ color: detectedPlatform.hex_color }}>
-                  {detectedPlatform.name}
-                </span>
-              </div>
-            ) : (
-              <Search className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" />
-            )}
-          </div>
+        <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center glass-panel-glow rounded-3xl p-2 sm:p-2.5 transition-all duration-300 gap-2 sm:gap-1.5 border border-white/10 shadow-2xl">
+          {/* Main Input Row */}
+          <div className="flex items-center flex-1 min-w-0">
+            {/* Platform Icon Badge */}
+            <div className="flex items-center pl-2 sm:pl-3 pr-1 py-1 text-gray-400 flex-shrink-0">
+              {detectedPlatform ? (
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold tracking-wide">
+                  {getPlatformIcon(detectedPlatform.id)}
+                  <span className="text-xs font-semibold hidden xs:inline" style={{ color: detectedPlatform.hex_color }}>
+                    {detectedPlatform.name}
+                  </span>
+                </div>
+              ) : (
+                <Search className="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" />
+              )}
+            </div>
 
-          {/* Main Hero Input */}
-          <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            onKeyDown={handleKeyDown}
-            onPaste={handleNativePaste}
-            onFocus={async () => {
-              if (!url) {
-                await onPaste();
-              }
-            }}
-            placeholder="Pega enlace de YouTube, TikTok, Insta..."
-            className="w-full min-w-0 bg-transparent border-none text-white placeholder-gray-500 text-xs sm:text-base font-normal px-2 py-2.5 sm:py-3 focus:outline-none focus:ring-0 selection:bg-violet-500 selection:text-white"
-          />
+            {/* Input Element with 16px font to prevent iOS/Android zoom */}
+            <input
+              type="text"
+              inputMode="url"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck="false"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onPaste={handleNativePaste}
+              placeholder="Pega el enlace de video o audio..."
+              className="w-full min-w-0 bg-transparent border-none text-white placeholder-gray-500 font-normal px-2.5 py-3 focus:outline-none focus:ring-0 selection:bg-violet-500 selection:text-white"
+              style={{ fontSize: "16px" }}
+            />
 
-          {/* Action Buttons inside Input */}
-          <div className="flex items-center gap-1 sm:gap-2 pr-1 flex-shrink-0">
-            {/* Clear Button if text present */}
+            {/* Clear Button */}
             {url && (
               <button
                 type="button"
                 onClick={() => setUrl("")}
-                className="p-1.5 sm:p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition"
-                title="Limpiar"
+                className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition flex-shrink-0"
+                title="Borrar enlace"
               >
-                <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <X className="w-4 h-4" />
               </button>
             )}
 
@@ -170,59 +170,58 @@ export function HeroInput({
             <button
               type="button"
               onClick={handleSmartPaste}
-              className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.12] border border-white/10 text-xs font-medium text-gray-300 hover:text-white transition active:scale-95 shadow-sm min-h-[38px] sm:min-h-[44px]"
+              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] active:bg-white/20 border border-white/10 text-xs font-semibold text-gray-200 hover:text-white transition active:scale-95 flex-shrink-0 min-h-[42px]"
               title="Pegar desde el portapapeles"
             >
               {copiedSuccess ? (
                 <>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="hidden md:inline text-emerald-400">¡Pegado!</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span className="text-emerald-400">¡Pegado!</span>
                 </>
               ) : (
                 <>
-                  <Clipboard className="w-3.5 h-3.5 text-cyan-400" />
-                  <span className="hidden md:inline">Paste</span>
-                </>
-              )}
-            </button>
-
-            {/* Submit / Analyze Button */}
-            <button
-              type="button"
-              disabled={isAnalyzing || !url.trim()}
-              onClick={() => onAnalyze()}
-              className="flex items-center gap-1 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-xs sm:text-sm tracking-wide shadow-lg shadow-violet-600/30 active:scale-95 transition-all duration-200 min-h-[38px] sm:min-h-[44px]"
-            >
-              {isAnalyzing ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin text-white" />
-                  <span className="hidden sm:inline">Analizando...</span>
-                </>
-              ) : (
-                <>
-                  <span>Extraer</span>
-                  <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <Clipboard className="w-4 h-4 text-cyan-400" />
+                  <span>Pegar</span>
                 </>
               )}
             </button>
           </div>
+
+          {/* Action Button: Full width on mobile for thumb, inline on desktop */}
+          <button
+            type="button"
+            disabled={isAnalyzing || !url.trim()}
+            onClick={() => onAnalyze()}
+            className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 sm:py-3 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-sm tracking-wide shadow-lg shadow-violet-600/30 active:scale-[0.98] transition-all min-h-[48px] flex-shrink-0"
+          >
+            {isAnalyzing ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-white" />
+                <span>Analizando...</span>
+              </>
+            ) : (
+              <>
+                <span>Extraer</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
         </div>
       </div>
 
       {/* Auto-detect info pill */}
-      <div className="flex items-center gap-2 mt-3 text-[11px] text-gray-500 font-medium">
-        <span className="relative flex h-2 w-2">
+      <div className="flex items-center justify-center gap-2 mt-3 text-[11px] text-gray-400 font-medium px-2 text-center">
+        <span className="relative flex h-2 w-2 flex-shrink-0">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
           <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
         </span>
-        <span className="text-gray-400">Detección automática activa:</span>
-        <span className="text-cyan-400/80 hidden sm:inline">Copia cualquier enlace o presiona Ctrl+V para analizar sin hacer clic</span>
-        <span className="text-cyan-400/80 sm:hidden">Copia un link o pega con Ctrl+V</span>
+        <span>Detección inteligente activa:</span>
+        <span className="text-cyan-400 font-semibold">Copia cualquier enlace y pulsa "Pegar"</span>
       </div>
 
       {/* Quick Example Suggestions */}
-      <div className="w-full flex flex-wrap items-center justify-center gap-2 mt-3 px-2">
-        <span className="text-xs text-gray-500 font-medium">Ejemplos rápidos:</span>
+      <div className="w-full flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-3 px-2">
+        <span className="text-xs text-gray-500 font-medium mr-1">Probar con:</span>
         {exampleLinks.map((ex, idx) => (
           <button
             key={idx}
@@ -231,7 +230,7 @@ export function HeroInput({
               setUrl(ex.url);
               onAnalyze(ex.url);
             }}
-            className="text-xs px-2.5 py-1 rounded-lg bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 text-gray-400 hover:text-cyan-300 transition-colors"
+            className="text-[11px] sm:text-xs px-2.5 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] active:bg-white/15 border border-white/5 text-gray-300 hover:text-cyan-300 transition active:scale-95"
           >
             {ex.label}
           </button>
