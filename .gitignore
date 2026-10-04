@@ -1,0 +1,53 @@
+# Python & Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Backend runtime files
+backend/venv/
+backend/.venv/
+backend/__pycache__/
+backend/temp/*
+!backend/temp/.gitkeep
+backend/cookies.txt
+*.log
+
+# Node & Next.js
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+.next/
+out/
+build/
+dist/
+.npm
+*.tsbuildinfo
+next-env.d.ts
+
+# Microservice & Local Weights
+propainter-service/weights/*
+!propainter-service/weights/.gitkeep
+propainter-service/storage/*
+!propainter-service/storage/.gitkeep
+
+# Environment variables & secrets
+.env
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
