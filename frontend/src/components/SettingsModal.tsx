@@ -123,7 +123,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </div>
 
           <p className="text-[11px] text-gray-400">
-            Ingresa la URL de tu API en Render (ej. <code className="text-cyan-300">https://vvideosdownloaderpro-api.onrender.com</code>):
+            Ingresa la URL de tu API en Render (ej. <code className="text-cyan-300">https://vvideosdownloaderpro-1.onrender.com</code>):
           </p>
 
           <div className="flex gap-2">
@@ -131,7 +131,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               type="text"
               value={apiUrlInput}
               onChange={(e) => setApiUrlInput(e.target.value)}
-              placeholder="https://vvideosdownloaderpro-api.onrender.com"
+              placeholder="https://vvideosdownloaderpro-1.onrender.com"
               className="flex-1 bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400/60 font-mono"
             />
             <button

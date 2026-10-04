@@ -32,10 +32,10 @@ export function getApiBaseUrl(): string {
     // If running on Render, automatically point to standard backend naming
     if (hostname.endsWith(".onrender.com")) {
       if (hostname.includes("vvideosdownloaderpro")) {
-        return "https://vvideosdownloaderpro-api.onrender.com";
+        return "https://vvideosdownloaderpro-1.onrender.com";
       }
       const prefix = hostname.replace(".onrender.com", "").replace(/-web$/, "");
-      return `https://${prefix}-api.onrender.com`;
+      return `https://${prefix}-1.onrender.com`;
     }
     return `http://${hostname}:8000`;
   }
