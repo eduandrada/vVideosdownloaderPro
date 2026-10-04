@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import confetti from "canvas-confetti";
 import { MediaMetadata, TaskProgress, DownloadOptions, PlatformInfo } from "@/types/media";
 import { apiFetch, getApiUrl } from "@/lib/api";
@@ -31,7 +31,13 @@ export function detectPlatformClient(url: string): PlatformInfo {
 
 export function useMediaDownloader() {
   const [url, setUrl] = useState("");
-  const [detectedPlatform, setDetectedPlatform] = useState<PlatformInfo | null>(null);
+  const detectedPlatform = useMemo<PlatformInfo | null>(() => {
+    const trimmed = url.trim();
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+      return detectPlatformClient(trimmed);
+    }
+    return null;
+  }, [url]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [metadata, setMetadata] = useState<MediaMetadata | null>(null);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
@@ -45,15 +51,6 @@ export function useMediaDownloader() {
 
   const eventSourceRef = useRef<EventSource | null>(null);
   const lastClipboardUrlRef = useRef<string>("");
-
-  // Update platform when URL changes
-  useEffect(() => {
-    if (url.trim().startsWith("http://") || url.trim().startsWith("https://")) {
-      setDetectedPlatform(detectPlatformClient(url));
-    } else {
-      setDetectedPlatform(null);
-    }
-  }, [url]);
 
   // Cleanup event source on unmount
   useEffect(() => {

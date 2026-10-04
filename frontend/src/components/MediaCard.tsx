@@ -1,22 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { 
   Film, 
   Music, 
   Image as ImageIcon, 
-  Sliders, 
   Scissors, 
   Download, 
   ExternalLink, 
   Check, 
-  FileVideo, 
   Disc, 
   Sparkles,
   Zap,
-  Layers,
-  ChevronDown,
   Wand2,
   Loader2
 } from "lucide-react";

@@ -3,16 +3,9 @@
 import React, { useState } from "react";
 import { 
   Sparkles, 
-  Zap, 
   Cpu, 
   ShieldCheck, 
-  Sliders, 
-  Layers, 
-  Clock, 
-  Music, 
-  Film, 
   Scissors, 
-  CheckCircle2, 
   AlertCircle 
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";

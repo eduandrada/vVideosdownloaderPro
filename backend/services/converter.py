@@ -71,6 +71,31 @@ async def run_ffmpeg_command(
     await process.wait()
     return process.returncode, "".join(stderr_output)
 
+async def get_video_dimensions(input_path: Path) -> tuple[int, int]:
+    """Retrieve actual width and height of video file via fast ffmpeg probe."""
+    ffmpeg_exe = get_ffmpeg_path()
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            ffmpeg_exe, "-i", str(input_path),
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        _, stderr_bytes = await proc.communicate()
+        stderr_text = stderr_bytes.decode("utf-8", errors="replace")
+        
+        # Look for video stream dimension pattern: e.g. 720x854 or 1080x1920
+        match = re.search(r"Video:.*,\s*(\d{2,5})x(\d{2,5})", stderr_text)
+        if match:
+            return int(match.group(1)), int(match.group(2))
+        
+        # Secondary fallback pattern
+        match2 = re.search(r"\b(\d{3,5})x(\d{3,5})\b", stderr_text)
+        if match2:
+            return int(match2.group(1)), int(match2.group(2))
+    except Exception:
+        pass
+    return 1280, 720
+
 class MediaConverter:
     def __init__(self):
         self.ffmpeg_path = get_ffmpeg_path()
@@ -237,31 +262,6 @@ class MediaConverter:
             raise RuntimeError(f"Ffmpeg video error (code {code}): {err[-400:]}")
 
         return output_file
-
-async def get_video_dimensions(input_path: Path) -> tuple[int, int]:
-    """Retrieve actual width and height of video file via fast ffmpeg probe."""
-    ffmpeg_exe = get_ffmpeg_path()
-    try:
-        proc = await asyncio.create_subprocess_exec(
-            ffmpeg_exe, "-i", str(input_path),
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
-        )
-        _, stderr_bytes = await proc.communicate()
-        stderr_text = stderr_bytes.decode("utf-8", errors="replace")
-        
-        # Look for video stream dimension pattern: e.g. 720x854 or 1080x1920
-        match = re.search(r"Video:.*,\s*(\d{2,5})x(\d{2,5})", stderr_text)
-        if match:
-            return int(match.group(1)), int(match.group(2))
-        
-        # Secondary fallback pattern
-        match2 = re.search(r"\b(\d{3,5})x(\d{3,5})\b", stderr_text)
-        if match2:
-            return int(match2.group(1)), int(match2.group(2))
-    except Exception:
-        pass
-    return 1280, 720
 
     async def delogo_video(
         self,

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { 
   X, 
   ShieldCheck, 
@@ -19,25 +19,39 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
+interface HealthData {
+  status?: string;
+  ffmpeg?: string;
+  cookies_loaded?: boolean;
+  platform?: string;
+}
+
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
-  const [health, setHealth] = useState<any>(null);
+  const [health, setHealth] = useState<HealthData | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [apiUrlInput, setApiUrlInput] = useState<string>("");
   const [saveUrlSuccess, setSaveUrlSuccess] = useState(false);
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+
+  if (isOpen !== prevOpen) {
+    setPrevOpen(isOpen);
+    if (isOpen) {
+      setApiUrlInput(getCustomApiUrl() || getApiBaseUrl());
+    }
+  }
+
+  const checkHealth = useCallback(() => {
+    apiFetch<HealthData>("/api/health", { timeoutMs: 3000 })
+      .then((data) => setHealth(data))
+      .catch(() => setHealth({ status: "offline" }));
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
-      setApiUrlInput(getCustomApiUrl() || getApiBaseUrl());
       checkHealth();
     }
-  }, [isOpen]);
-
-  const checkHealth = () => {
-    apiFetch("/api/health", { timeoutMs: 3000 })
-      .then((data) => setHealth(data))
-      .catch(() => setHealth({ status: "offline" }));
-  };
+  }, [isOpen, checkHealth]);
 
   const handleSaveApiUrl = () => {
     let clean = apiUrlInput.trim();
@@ -72,7 +86,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         body: formData
       });
       setUploadStatus("¡Archivo cookies.txt importado con éxito!");
-      apiFetch("/api/health").then(setHealth).catch(() => {});
+      checkHealth();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Error al conectar con la API.";
       setUploadStatus(`Error: ${msg}`);

@@ -216,7 +216,7 @@ export function HeroInput({
           <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
         </span>
         <span>Detección inteligente activa:</span>
-        <span className="text-cyan-400 font-semibold">Copia cualquier enlace y pulsa "Pegar"</span>
+        <span className="text-cyan-400 font-semibold">Copia cualquier enlace y pulsa &quot;Pegar&quot;</span>
       </div>
 
       {/* Quick Example Suggestions */}

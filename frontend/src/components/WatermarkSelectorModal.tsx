@@ -1,19 +1,12 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { 
   X, 
-  Sparkles, 
   Cpu, 
   Zap, 
-  Clock, 
-  Sliders, 
   Scissors, 
-  CheckCircle2, 
-  AlertTriangle,
   Move,
-  Maximize2,
-  Layers,
   Wand2
 } from "lucide-react";
 import { MediaMetadata } from "@/types/media";
@@ -33,7 +26,7 @@ interface WatermarkSelectorModalProps {
   isOpen: boolean;
   onClose: () => void;
   metadata: MediaMetadata;
-  url: string;
+  url?: string;
   onProcessWatermark: (params: {
     mode: "delogo" | "ai_inpaint";
     box: BoundingBox;
@@ -46,15 +39,13 @@ export function WatermarkSelectorModal({
   isOpen,
   onClose,
   metadata,
-  url,
   onProcessWatermark
 }: WatermarkSelectorModalProps) {
   // Method: "delogo" (Express) vs "ai_inpaint" (Neural ProPainter)
   const [method, setMethod] = useState<"delogo" | "ai_inpaint">("delogo");
   
-  // Video container & Preview dimensions
+  // Video container ref
   const containerRef = useRef<HTMLDivElement>(null);
-  const [containerSize, setContainerSize] = useState({ width: 640, height: 360 });
 
   // Bounding box in percentage (0-100) for responsive drag & drop
   const [boxPct, setBoxPct] = useState({ x: 70, y: 5, w: 25, h: 15 }); // default top right corner
@@ -71,17 +62,7 @@ export function WatermarkSelectorModal({
   const [endTime, setEndTime] = useState(totalDuration);
 
   // Live preview toggle
-  const [showPreviewBlur, setShowPreviewBlur] = useState(true);
-
-  // Update container size on mount / resize
-  useEffect(() => {
-    if (isOpen && containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      if (rect.width > 0 && rect.height > 0) {
-        setContainerSize({ width: rect.width, height: rect.height });
-      }
-    }
-  }, [isOpen]);
+  const showPreviewBlur = true;
 
   if (!isOpen) return null;
 
@@ -93,7 +74,6 @@ export function WatermarkSelectorModal({
   };
 
   // Convert percentage to actual pixels (based on typical video 1920x1080 or 1080x1920)
-  const isVertical = metadata.thumbnail ? false : false; // standard HD default
   const baseVideoWidth = 1920;
   const baseVideoHeight = 1080;
 

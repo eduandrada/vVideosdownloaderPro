@@ -1,5 +1,5 @@
 /**
- * OmniPull API Client
+ * vVideosdownloaderPro v2 API Client
  * Connects directly to FastAPI backend (bypassing Next.js proxy rewrite issues like ECONNRESET)
  * with automatic fallback and bulletproof error parsing.
  */
@@ -74,7 +74,7 @@ export interface ApiFetchOptions extends RequestInit {
   timeoutMs?: number;
 }
 
-export async function apiFetch<T = any>(
+export async function apiFetch<T = unknown>(
   endpoint: string,
   options?: ApiFetchOptions
 ): Promise<T> {
@@ -112,7 +112,7 @@ export async function apiFetch<T = any>(
 
   // 3. Bulletproof response parsing (never throws "Unexpected token in JSON")
   const rawText = await res.text();
-  let data: any = null;
+  let data: unknown = null;
 
   if (rawText) {
     try {
@@ -125,13 +125,21 @@ export async function apiFetch<T = any>(
   // 4. Handle HTTP errors gracefully
   if (!res.ok) {
     let errorMessage = "Error en el servidor.";
-    if (data && typeof data === "object" && data.detail) {
-      if (typeof data.detail === "string") {
-        errorMessage = data.detail;
-      } else if (Array.isArray(data.detail)) {
-        errorMessage = data.detail.map((d: any) => d.msg || JSON.stringify(d)).join(", ");
+    if (data && typeof data === "object" && "detail" in data) {
+      const detail = (data as { detail: unknown }).detail;
+      if (typeof detail === "string") {
+        errorMessage = detail;
+      } else if (Array.isArray(detail)) {
+        errorMessage = detail
+          .map((d: unknown) => {
+            if (d && typeof d === "object" && "msg" in d) {
+              return String((d as { msg: unknown }).msg);
+            }
+            return JSON.stringify(d);
+          })
+          .join(", ");
       } else {
-        errorMessage = JSON.stringify(data.detail);
+        errorMessage = JSON.stringify(detail);
       }
     } else if (typeof data === "string" && data.trim()) {
       errorMessage = data.replace(/^<[^>]+>/g, "").slice(0, 300);

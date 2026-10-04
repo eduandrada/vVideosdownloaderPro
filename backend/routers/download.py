@@ -90,7 +90,7 @@ async def process_media_pipeline(task_id: str, req: DownloadRequest):
                 message=msg
             )
 
-        clean_title = sanitize_filename(req.title or "omnipull_media")
+        clean_title = sanitize_filename(req.title or "vvideo_media")
         final_file: Path
 
         if is_audio:
@@ -489,5 +489,5 @@ async def health_check():
         "status": "online",
         "ffmpeg": get_ffmpeg_path(),
         "cookies_loaded": COOKIES_FILE.exists() and COOKIES_FILE.stat().st_size > 0,
-        "platform": "OmniPull Core API"
+        "platform": "vVideosdownloaderPro v2 Core API"
     }

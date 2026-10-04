@@ -5,7 +5,6 @@ import {
   Download, 
   CheckCircle2, 
   AlertCircle, 
-  Sparkles, 
   Cpu, 
   Clock, 
   Zap, 
